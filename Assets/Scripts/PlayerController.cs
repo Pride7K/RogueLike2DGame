@@ -12,9 +12,15 @@ public class PlayerController : MonoBehaviour
 
     private Camera camera;
 
+
+    public float timeBetweenShots = 0.2f;
+
+    private float shotCounter;
     public Animator anim;
 
+    public GameObject bulletToFire;
 
+    public Transform firePoint;
     public Rigidbody2D theRB;
 
     // Start is called before the first frame update
@@ -28,7 +34,7 @@ public class PlayerController : MonoBehaviour
     {
         moveInput.x = Input.GetAxisRaw("Horizontal");
         moveInput.y = Input.GetAxisRaw("Vertical");
-        
+
         moveInput.Normalize();
         //transform.position += new Vector3(
         //  moveInput.x* Time.deltaTime * moveSpeed,
@@ -59,7 +65,22 @@ public class PlayerController : MonoBehaviour
         float angle = Mathf.Atan2(offset.y, offset.x) * Mathf.Rad2Deg;
         gunHand.rotation = Quaternion.Euler(0, 0, angle);
 
-        anim.SetBool("isMoving",moveInput != Vector2.zero);
+        if (Input.GetMouseButtonDown(0))
+        {
+            Instantiate(bulletToFire, firePoint.position, firePoint.rotation);
+            shotCounter = timeBetweenShots;
+        }
+        if (Input.GetMouseButton(0))
+        {
+            shotCounter -= Time.deltaTime;
+            if (shotCounter <= 0)
+            {
+                Instantiate(bulletToFire, firePoint.position, firePoint.rotation);
+                shotCounter = timeBetweenShots;
+            }
+        }
+
+        anim.SetBool("isMoving", moveInput != Vector2.zero);
 
     }
 }
