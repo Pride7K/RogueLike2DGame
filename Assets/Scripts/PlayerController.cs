@@ -5,12 +5,13 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
 
+    public static PlayerController instance;
     public float moveSpeed;
     private Vector2 moveInput;
 
     public Transform gunHand;
 
-    private Camera camera;
+    private Camera theCamera;
 
 
     public float timeBetweenShots = 0.2f;
@@ -23,10 +24,16 @@ public class PlayerController : MonoBehaviour
     public Transform firePoint;
     public Rigidbody2D theRB;
 
+    
+    private void Awake()
+    {
+        instance = this;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-        camera = Camera.main;
+        theCamera = Camera.main;
     }
 
     // Update is called once per frame
@@ -43,7 +50,7 @@ public class PlayerController : MonoBehaviour
 
         theRB.velocity = moveInput * moveSpeed;
         Vector3 mousePosition = Input.mousePosition;
-        Vector3 screenPoint = camera.WorldToScreenPoint(transform.localPosition);
+        Vector3 screenPoint = theCamera.WorldToScreenPoint(transform.localPosition);
 
         if (mousePosition.x < screenPoint.x)
         {
